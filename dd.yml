@@ -1,0 +1,22 @@
+---
+- hosts: linux
+  user: raj
+  become: yes
+  become_method: sudo
+  connection: ssh
+  gather_facts: yes
+  tasks:
+  - name: installing lynx package on redhat family
+    command: yum install -y telnet
+    when: ansible_os_family == "RedHat"
+  - name: installing lynx on debian family
+    command: apt -y install telnet
+    when: ansible_os_family == "Debian"
+  - name: add users on remote servers
+    user: name={{ item }} state=present
+    with_items:
+    - user1
+    - user2
+    - user3
+
+

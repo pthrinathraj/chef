@@ -1,0 +1,17 @@
+---
+- hosts: linux
+  user: raj
+  become: yes
+  become_method: sudo
+  connection: ssh
+  gather_facts: no
+  vars:
+   playbook_version: 1.0
+  vars_prompt:
+   - name: installpackage
+     prompt: what package to install?
+     default: telnet
+     private: no
+  tasks: 
+  - name: install specified or default package
+    yum:  pkg={{ installpackage }} state=latest 

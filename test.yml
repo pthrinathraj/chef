@@ -1,0 +1,28 @@
+--- # test cookbook
+- hosts: linux
+  user: raj
+  become: yes
+  become_method: sudo
+  connection: ssh
+  gather_facts: yes
+  tasks:
+  - name: date/timestamp
+    command: /usr/bin/date
+    register: timestamp_start
+  - debug: var=timestamp_start
+  - name: installing apache2 on Debian based system
+    command: apt-get -y install apache2
+    when: ansible_os_family == "Debian"
+  - name: install apache on redhat or centos
+    command: yum -y install httpd
+    when: ansible_os_family == "RedHat"
+    notify: restart httpd
+  - name: install telnet
+    action: pkg=telnet state=latest
+  - name: status of httpd package if it is installed or not
+    command: yum list installed
+    register: installed_packages
+  - debug: var=installed_packages
+  handlers:
+  - name: restart httpd
+    action: service name=httpd state=enabled
